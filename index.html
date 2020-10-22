@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Quiz App</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet"
+    type="text/css" />
+  <link href="css/styles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <header>
+    <h1>The Office Trivia Quiz</h1>
+  </header>
+  <main></main>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.js" crossorigin="anonymous"></script>
+  <script src="scripts/store.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+
+</html>
+
+<!--
+  User Experience Requirements:
+
+    1. The starting screen should have a button that users can click to start the quiz.
+    2. Users should be prompted through a series of at least 5 multiple choice questions that they can answer.
+      a. Users should be asked questions 1 after the other.
+      b. Users should only be prompted with 1 question at a time.
+    3. Users should not be able to skip questions.
+    4. Users should also be able to see which quetsion they're on (for instance, "7 out of 10") and their current score ("5 correct, 2 incorrect")
+    5. Upon submitting an answer, users should:
+      a. Receive textual feedback about their answer. If they were incorrect, they should be told the correct answer.
+      b. Be moved onto the next questions (or interact with an element to move on)
+    6. Users should be shown their overall score at the end of the quiz. In other words, how much questions they got right out of the total questioned asked.
+    7. Users should be able to start a new quiz.
+
+  Technical Requirements:
+  
+  Your Quiz App Must Have:
+
+    1. Include a render() function, that conditionally regenerates the view each time the store is updated.
+    2. Include single-purpose template generation function.
+    3. Include event handler functions.
+    4. Do not add additional HTML elements to the boilerplate code's index.html file (you may add attributes, e.g., classes and ids, to the existing HTML elements, or link
+        stylesheets or additional scripts if necessary).
+    5. Render answer choices in a <form>.
+    6. Use semantic HTML, along with CSS and jQuery.
+    7. Follow a11y best practices.
+    8. Be fully usable by keyboard (which will be easy enough if you start with a form).
+    9. Use responsive design (refer back to previous checkpoints on responsive design and forms for any help with the HTML/CSS materials).
+    10. Be as accessible as you can make.
+      a. Make sure your 'label' tags are properly associated with your inputs.
+
+  Process Requirements:
+
+  Before you dive into the app, you'll need to:
+
+    1. Gather content for your app. That means typing up the questions you'll ask and gathering any images or icone you'll need.
+    2. Think about the user experience outlines above and how your design must make them possible.
+    3. Design your app using HTML wireframs, which are HTML- (and minimal CSS-) only verions of the different screens in your app.
+-->
+

@@ -1,7 +1,8 @@
-//https://github.com/sean21johnson/The-Quiz-App
-/********** TEMPLATE GENERATION FUNCTIONS **********/
+
+
 
 /* This function will create the HTML for the initial start screen of the quiz */
+
 function startScreen() {
     return `
         <div class="starter">
@@ -14,7 +15,29 @@ function startScreen() {
     `;
 }
 
+
+/*This function is creating the HTML that will reflect on the results page*/
+
+function resultsPage() {
+    return `
+        <div class="results">
+                <fieldset>
+                    <legend>Final Score: ${store.score} out of ${store.questions.length}</legend>
+                    <button type="button" id="redo"> Try Quiz Again </button>
+                </fieldset>
+                <img class= "finished" src = "images/end/gretzky.jpg" alt= "Michael Scott infront of a white board with a quote" />
+
+        </div>
+    `
+}
+
+
+
+
+/* -------- Counters ------ */
+
 /* This function is creating the HTML that displays which question # the user is on */
+
 function questionNumbers() {   
     return `
         <div class="question-current">
@@ -26,6 +49,7 @@ function questionNumbers() {
 }
 
 /* This function is creating the HTML that displays the score for the user at whichever question they are currently on */
+
 function overallScore() {
     return `
         <div class="current-score">
@@ -36,7 +60,12 @@ function overallScore() {
     `;  
 }
 
+
+
+// Displays
+
 /* This function is creating the HTML that displays the list of answers to a given question */
+
 function showAnswers() {
     const answersArray = store.questions[store.questionNumber].answers;
     let answersHtml = '';
@@ -55,47 +84,37 @@ function showAnswers() {
 }
 
 /*This function is creating the HTML that displays a given question.  Also note that the showAnswers() function will need to be called here in order to get the answers to reflect */
+
 function showQuestion() {
     let questionNumber = store.questions[store.questionNumber];
     let thisQuestion = ''
-    thisQuestion += `
-        <div class="question-number">
-        ${questionNumbers()}
-        </div>
-        <form id="questions-form">
-            <fieldset>
-                <div class="question">
-                    <legend> ${questionNumber.question}</legend>
-                </div>
-                <div class="choices">
-                    <div class="answers">
-                        ${showAnswers()}
-                    </div>
-                </div>
-                <button type="submit" id="answer-submit-button" >Submit Answer</button>
-            </fieldset>
-        </form>
+        thisQuestion += `
+            <div class="question-number">
+                ${questionNumbers()}
+            </div>
 
-        <div class="scorer"
-        ${overallScore()}
-        </div>
+            <form id="questions-form">
+                <fieldset>
+                    <div class="question">
+                        <legend> ${questionNumber.question}</legend>
+                    </div>
+                    <div class="choices">
+                        <div class="answers">
+                            ${showAnswers()}
+                        </div>
+                    </div>
+                    <button type="submit" id="answer-submit-button" >Submit Answer</button>
+                </fieldset>
+            </form>
+
+            <div class="scorer"
+                ${overallScore()}
+            </div>
     `;
     return thisQuestion;
 }
 
-/*This function is creating the HTML that will reflect on the results page*/
-function resultsPage() {
-    return `
-        <div class="results">
-                <fieldset>
-                    <legend>Final Score: ${store.score} out of ${store.questions.length}</legend>
-                    <button type="button" id="redo"> Try Quiz Again </button>
-                </fieldset>
-                <img class= "finished" src = "images/end/gretzky.jpg" alt= "Michael Scott infront of a white board with a quote" />
 
-        </div>
-    `
-}
 
 function answerResponse(input) {
     let response = '';
@@ -140,35 +159,27 @@ function answerResponse(input) {
     return response;
 }
 
-/* This function renders all of the functions onto the screen for the user */
-function render() {
-        if (store.quizStarted === false){
-            $('main').html(startScreen());
-        }
-        else if (store.quizStarted === true){
-            // $('main').html(showAnswers())
-            $('main').html(showQuestion());
-        }
-
-}
-
 
 
 /*EVENT HANDLER functions below*/
-function restartTheQuiz() {
-    store.quizStarted = false;
-    store.questionNumber = 0;
-    store.score = 0;
+
+
+/* This function renders all of the functions onto the screen for the user */
+
+function render() {
+    if (store.quizStarted === false){
+        $('main').html(startScreen());
+    }
+    else if (store.quizStarted === true){
+        // $('main').html(showAnswers())
+        $('main').html(showQuestion());
+    }
+
 }
 
-function handleRestartQuiz() {
-    $('main').on('click', '#redo', function(){
-        restartTheQuiz();
-        $('main').html(startScreen)
-    })
-}
 
 /* This function handles when a user clicks 'Start The Quiz' */ 
+
 function handleStartQuiz() {
     $('main').on('click', '#start', function(){
         store.quizStarted = true;
@@ -177,6 +188,7 @@ function handleStartQuiz() {
 }
 
 /*This function handles when a user clicks on "Next Button" */
+
 function handleNextQuestion() {
     $('main').on('click', '#next-question-button', function(evt){
         evt.preventDefault();
@@ -189,14 +201,9 @@ function handleNextQuestion() {
     })
 }
 
-// function handleTryAgain() {
-//     $('main').on('click', '#redo', function(evt){
-//         evt.preventDefault();
-//         return startScreen();
-//     })
-// }
 
 /* This function handles when a user submits the answer to a given question */
+
 function handleAnswerSubmission() {
     $('main').submit('#question-form', function(evt){
         evt.preventDefault();
@@ -214,7 +221,27 @@ function handleAnswerSubmission() {
     })
 }
 
+
+
+/* ------ Restarts ----- */
+
+function handleRestartQuiz() {
+    $('main').on('click', '#redo', function(){
+        restartTheQuiz();
+        $('main').html(startScreen)
+    })
+}
+
+function restartTheQuiz() {
+    store.quizStarted = false;
+    store.questionNumber = 0;
+    store.score = 0;
+}
+
+
+
 /*This function will effectively show everything on the screen by linking to the main HTML div */
+
 function main() {
     handleStartQuiz();
     render();
@@ -223,5 +250,6 @@ function main() {
     resultsPage();
     handleRestartQuiz();
 }
+
 
 $(main);

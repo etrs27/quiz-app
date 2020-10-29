@@ -10,7 +10,7 @@ function startScreen() {
             <p>There will be 5 questions total.</p>
             <p>If you can get every question right, you may label yourself a Super Fan!</p>
             <button type="button" id="start">Start The Quiz</button>
-            <img class= "intro" src = "images/intro/theOfficeLogo.jpg" alt= "" />
+            <img class= "intro" src = "images/intro/theOfficeLogo.jpg" alt= "The Office logo" />
         </div>
     `;
 }
@@ -20,14 +20,60 @@ function startScreen() {
 
 function resultsPage() {
     return `
-        <div class="results">
+        <div class="results-container">
                 <fieldset>
                     <legend>Final Score: ${store.score} out of ${store.questions.length}</legend>
-                    <button type="button" id="redo"> Try Quiz Again </button>
+                    <button type="button" id="redo"> Try Again </button>
                 </fieldset>
                 <img class= "finished" src = "images/end/gretzky.jpg" alt= "Michael Scott infront of a white board with a quote" />
 
         </div>
+    `
+}
+
+// Responses
+
+function answerResponseCorrect(){
+    return `
+    <div class="correct-response"><p>You answered correctly!</p>
+    <br>
+    <button type="button" id="next-question-button">Next Question</button>
+    <img class= "correct" src="images/correct/correct-answer.jpg" alt="Michael Scott anouncing who got the Dundie Award" />
+    </div>
+    `
+}
+
+function answerResponseIncorrect(){
+    let rightAnswer = store.questions[store.questionNumber - 1].correctAnswer;
+    return `
+    <div class="wrong-response"><p>You answered incorrectly. The correct answer is ${rightAnswer}.</p>
+    <br>
+    <button type="button" id="next-question-button">Next Question</button>
+    <img class= "false" src="images/false/dwight-false.jpg" alt="Animated picture of Dwight Shrute with his hands on his hips. Labeled as 'FALSE.'" />
+    </div>
+    `
+}
+
+// Results
+
+function showResultsPageCorrect(){
+    return `
+    <div class="correct-response"><p>You answered correctly!</p>
+    <br>
+    <button type="button" id="show-results" >Show Results</button>
+    <img class= "correct" src = "images/correct/correct-answer.jpg" alt= "Michael Scott anouncing who got the Dundie Award" />
+    </div>
+    `
+    }
+
+function showResultsPageIncorrect(){
+    let rightAnswer = store.questions[store.questionNumber - 1].correctAnswer;
+    return `
+    <div class="wrong-response"><p>You answered incorrectly. The correct answer is ${rightAnswer}.</p>
+    <br>
+    <button type="button" id="show-results" >Show Results</button>
+    <img class= "false" src = "images/false/dwight-false.jpg" alt= "Animated picture of Dwight Shrute with his hands on his hips. Labeled as 'FALSE.' " />
+    </div>
     `
 }
 
@@ -40,7 +86,7 @@ function resultsPage() {
 
 function questionNumbers() {   
     return `
-        <div class="question-current">
+        <div class="current-question">
             <p id="question-number">
                 Question Number: ${store.questionNumber + 1} out of ${store.questions.length}
             </p>
@@ -62,23 +108,19 @@ function overallScore() {
 
 
 
-// Displays
-
 /* This function is creating the HTML that displays the list of answers to a given question */
 
 function showAnswers() {
     const answersArray = store.questions[store.questionNumber].answers;
     let answersHtml = '';
-    let index = 0;
 
     answersArray.forEach(answer => {
         answersHtml += `
-        <div id="choice-container-${index}">
-            <input type="radio" name="choices" id="choice${index + 1}" value="${answer}" required>
-            <label for "choice${index + 1}  aria-checked=false> ${answer} </label>
+        <div class="choice-container">
+            <input type="radio" name="choices" id="choices" value="${answer}" required>
+            <label for "choices"  aria-checked="false"> ${answer} </label>
         </div>
         `;
-        index++;
     });
     return answersHtml;
 }
@@ -89,7 +131,8 @@ function showQuestion() {
     let questionNumber = store.questions[store.questionNumber];
     let thisQuestion = ''
         thisQuestion += `
-            <div class="question-number">
+        <div class="question-display">
+            <div class="current-question">
                 ${questionNumbers()}
             </div>
 
@@ -107,61 +150,18 @@ function showQuestion() {
                 </fieldset>
             </form>
 
-            <div class="scorer"
+            <div class="current-score">
                 ${overallScore()}
             </div>
+        </div>
     `;
     return thisQuestion;
 }
 
 
-
-function answerResponse(input) {
-    let response = '';
-    let rightAnswer = store.questions[store.questionNumber - 1].correctAnswer;
-    if (store.questionNumber === store.questions.length){
-        if (input === 'correct'){
-                response = `
-            <div class="correct-response">You answered correctly!</div>
-            <button type="button" id="show-results" >Show Results</button>
-            <img class= "correct" src = "images/correct/correct-answer.jpg" alt= "Michael Scott anouncing who got the Dundie Award" />
-            `; 
-            $('main').on('click', '#show-results', function(evt){
-                return $('main').html(resultsPage());
-            })
-        }
-        else if (input === 'incorrect') {
-                response = `
-            <div class="correct-response">You answered incorrectly. The correct answer is ${rightAnswer}.</div>
-            <button type="button" id="show-results" >Show Results</button>
-            <img class= "false" src = "images/false/dwight-false.jpg" alt= "Animated picture of Dwight Shrute with his hands on his hips. Labeled as 'FALSE.' " />
-            `; 
-            $('main').on('click', '#show-results', function(evt){
-                return $('main').html(resultsPage());
-            })
-        }
-    }
-    else if (input === 'correct') {
-        response = `
-        <div class="correct-response">You answered correctly!</div>
-        <button type="button" id="next-question-button" >Next Question</button>
-        <img class= "correct" src = "images/correct/correct-answer.jpg" alt= "Michael Scott anouncing who got the Dundie Award" />
-        `;
-    }
-    else if (input === 'incorrect') {
-        response = `
-        <div class="wrong-response">You answered incorrectly. The correct answer is ${rightAnswer}.</div>
-        <button type="button" id="next-question-button">Next Question</button>
-        <img class= "false" src = "images/false/dwight-false.jpg" alt= "Animated picture of Dwight Shrute with his hands on his hips. Labeled as 'FALSE.' " />
-        
-        `;
-    }
-    return response;
-}
+    
 
 
-
-/*EVENT HANDLER functions below*/
 
 
 /* This function renders all of the functions onto the screen for the user */
@@ -171,7 +171,6 @@ function render() {
         $('main').html(startScreen());
     }
     else if (store.quizStarted === true){
-        // $('main').html(showAnswers())
         $('main').html(showQuestion());
     }
 
@@ -181,7 +180,8 @@ function render() {
 /* This function handles when a user clicks 'Start The Quiz' */ 
 
 function handleStartQuiz() {
-    $('main').on('click', '#start', function(){
+    $('main').on('click', '#start', function(evt){
+        evt.preventDefault();
         store.quizStarted = true;
         render();
     })
@@ -192,8 +192,8 @@ function handleStartQuiz() {
 function handleNextQuestion() {
     $('main').on('click', '#next-question-button', function(evt){
         evt.preventDefault();
-        if (store.questionNumber >= store.questions.length) {
-            $('main').html(resultsPage());
+        if (store.questionNumber === store.questions.length) {
+            $('main').html(showResultsPage());
         }
         else {
             render();
@@ -209,15 +209,33 @@ function handleAnswerSubmission() {
         evt.preventDefault();
         let rightAnswer = store.questions[store.questionNumber].correctAnswer;
         let selectedAnswer = $('input[name=choices]:checked').val();
-            if (selectedAnswer === rightAnswer) {
+        if (selectedAnswer === rightAnswer){
+            if (rightAnswer === store.questions[store.questions.length - 1].correctAnswer){
+                store.score++;
+                return $('main').html(showResultsPageCorrect());
+            } else {
                 store.score++;
                 store.questionNumber++
-                return $('main').html(answerResponse('correct'));
+                return $('main').html(answerResponseCorrect());
             }
-            else if (selectedAnswer !== rightAnswer) {
+        }
+        else if (selectedAnswer !== rightAnswer){
+            if (rightAnswer === store.questions[store.questions.length - 1].correctAnswer){
+                return $('main').html(showResultsPageIncorrect());
+            } else {
                 store.questionNumber++
-                return $('main').html(answerResponse('incorrect'));
+                return $('main').html(answerResponseIncorrect());
             }
+            
+        }
+    })
+    render();
+}
+
+function handleShowResults(){
+    $('main').on('click', '#show-results', function (evt){
+        evt.preventDefault();
+        $('main').html(resultsPage());
     })
 }
 
@@ -226,9 +244,10 @@ function handleAnswerSubmission() {
 /* ------ Restarts ----- */
 
 function handleRestartQuiz() {
-    $('main').on('click', '#redo', function(){
+    $('main').on('click', '#redo', function(evt){
+        evt.preventDefault();
         restartTheQuiz();
-        $('main').html(startScreen)
+        render();
     })
 }
 
@@ -248,6 +267,7 @@ function main() {
     handleAnswerSubmission();
     handleNextQuestion();
     resultsPage();
+    handleShowResults();
     handleRestartQuiz();
 }
 

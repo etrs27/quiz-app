@@ -1,7 +1,5 @@
 
-
-
-/* This function will create the HTML for the initial start screen of the quiz */
+/* This function will create the HTML for the initial start screen of the quiz*/
 
 function startScreen() {
     return `
@@ -15,10 +13,9 @@ function startScreen() {
     `;
 }
 
+/*This function is creating the HTML that will reflect on the end of the quiz*/
 
-/*This function is creating the HTML that will reflect on the results page*/
-
-function resultsPage() {
+function endPage() {
     return `
         <div class="results-container">
                 <fieldset>
@@ -31,7 +28,7 @@ function resultsPage() {
     `
 }
 
-// Responses
+/*This function is creating the HTML that will reflect on the user's response*/
 
 function answerResponseCorrect(){
     return `
@@ -43,8 +40,8 @@ function answerResponseCorrect(){
     `
 }
 
-function answerResponseIncorrect(){
-    let rightAnswer = store.questions[store.questionNumber - 1].correctAnswer;
+function answerResponseIncorrect(rightAnswer){
+   
     return `
     <div class="wrong-response"><p>You answered incorrectly. The correct answer is ${rightAnswer}.</p>
     <br>
@@ -54,7 +51,7 @@ function answerResponseIncorrect(){
     `
 }
 
-// Results
+/*This function is creating the HTML that will reflect on that the quiz results*/
 
 function showResultsPageCorrect(){
     return `
@@ -66,8 +63,8 @@ function showResultsPageCorrect(){
     `
     }
 
-function showResultsPageIncorrect(){
-    let rightAnswer = store.questions[store.questionNumber - 1].correctAnswer;
+function showResultsPageIncorrect(rightAnswer){
+   
     return `
     <div class="wrong-response"><p>You answered incorrectly. The correct answer is ${rightAnswer}.</p>
     <br>
@@ -76,7 +73,6 @@ function showResultsPageIncorrect(){
     </div>
     `
 }
-
 
 
 
@@ -166,15 +162,36 @@ function showQuestion() {
 
 /* This function renders all of the functions onto the screen for the user */
 
-function render() {
-    if (store.quizStarted === false){
+function render(){
+    if (store.quizFinished === true){
+        $('main').html(endPage());
+    }
+    else if (store.quizStarted === false && store.questionNumber === 0){
         $('main').html(startScreen());
     }
-    else if (store.quizStarted === true){
+    else {
         $('main').html(showQuestion());
     }
-
 }
+
+function renderShowResults(selectedAnswer, rightAnswer){
+    if (store.quizStarted === true && selectedAnswer === rightAnswer){
+        $('main').html(showResultsPageCorrect());
+    } 
+    else if (store.quizStarted === true) {
+        $('main').html(showResultsPageIncorrect(rightAnswer));
+    }
+}
+  
+function renderNextQuestion(selectedAnswer, rightAnswer){
+    if (store.quizStarted === true && selectedAnswer === rightAnswer){
+        $('main').html(answerResponseCorrect());
+    }
+    else if (store.quizStarted === true) {
+        $('main').html(answerResponseIncorrect(rightAnswer));
+    }
+}
+
 
 
 /* This function handles when a user clicks 'Start The Quiz' */ 
@@ -192,17 +209,9 @@ function handleStartQuiz() {
 function handleNextQuestion() {
     $('main').on('click', '#next-question-button', function(evt){
         evt.preventDefault();
-        if (store.questionNumber === store.questions.length) {
-            $('main').html(showResultsPage());
-        }
-        else {
-            render();
-        }
+        render();
     })
 }
-
-
-/* This function handles when a user submits the answer to a given question */
 
 function handleAnswerSubmission() {
     $('main').submit('#question-form', function(evt){
@@ -212,30 +221,30 @@ function handleAnswerSubmission() {
         if (selectedAnswer === rightAnswer){
             if (rightAnswer === store.questions[store.questions.length - 1].correctAnswer){
                 store.score++;
-                return $('main').html(showResultsPageCorrect());
+                renderShowResults(selectedAnswer, rightAnswer);
             } else {
                 store.score++;
                 store.questionNumber++
-                return $('main').html(answerResponseCorrect());
+                renderNextQuestion(selectedAnswer, rightAnswer);
             }
         }
-        else if (selectedAnswer !== rightAnswer){
+        else {
             if (rightAnswer === store.questions[store.questions.length - 1].correctAnswer){
-                return $('main').html(showResultsPageIncorrect());
+                renderShowResults(selectedAnswer, rightAnswer);
             } else {
                 store.questionNumber++
-                return $('main').html(answerResponseIncorrect());
+                renderNextQuestion(selectedAnswer, rightAnswer);
             }
             
         }
     })
-    render();
 }
 
 function handleShowResults(){
     $('main').on('click', '#show-results', function (evt){
         evt.preventDefault();
-        $('main').html(resultsPage());
+        store.quizFinished = true;
+        render();
     })
 }
 
@@ -253,6 +262,7 @@ function handleRestartQuiz() {
 
 function restartTheQuiz() {
     store.quizStarted = false;
+    store.quizFinished = false;
     store.questionNumber = 0;
     store.score = 0;
 }
@@ -262,13 +272,14 @@ function restartTheQuiz() {
 /*This function will effectively show everything on the screen by linking to the main HTML div */
 
 function main() {
-    handleStartQuiz();
     render();
+    handleStartQuiz();
     handleAnswerSubmission();
     handleNextQuestion();
-    resultsPage();
     handleShowResults();
     handleRestartQuiz();
+    renderShowResults();
+    renderNextQuestion();
 }
 
 

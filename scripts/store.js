@@ -53,7 +53,9 @@ const store = {
       correctAnswer: "The dementors"
     }
   ],
+  
   quizStarted: false,
+  quizFinished: false,
   questionNumber: 0,
   score: 0,
 };
